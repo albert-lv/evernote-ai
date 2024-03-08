@@ -5,9 +5,10 @@ import com.evernote.edam.error.EDAMSystemException;
 import com.evernote.edam.error.EDAMUserException;
 import com.evernote.thrift.TException;
 import lombok.RequiredArgsConstructor;
-import org.albert.evernote.ai.service.EverNoteAiService;
+import org.albert.evernote.ai.service.evernote.EverNoteAiService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -22,6 +23,12 @@ public class EverNoteController {
     public SseEmitter weeklySummary()
             throws TException, EDAMNotFoundException, EDAMSystemException, EDAMUserException {
         SseEmitter emitter = new SseEmitter();
-        return everNoteAiService.generateWeeklySummaryStream(emitter);
+        return everNoteAiService.weeklySummaryStream(emitter);
+    }
+
+    @GetMapping("/ai/rag")
+    public SseEmitter evernoteRag(@RequestParam("query") String query) {
+        SseEmitter emitter = new SseEmitter();
+        return everNoteAiService.ragStream(query, emitter);
     }
 }

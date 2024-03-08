@@ -1,24 +1,22 @@
-package org.albert.evernote.ai.service;
+package org.albert.evernote.ai.service.evernote;
 
 import java.util.List;
 import org.albert.evernote.ai.constant.EverNoteConstants;
-import org.albert.evernote.ai.service.impl.EverNotePromptServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class EverNotePromptServiceImplTest {
 
-    private final EverNotePromptService everNotePromptService;
-
-    public EverNotePromptServiceImplTest() {
-        everNotePromptService = new EverNotePromptServiceImpl();
-    }
+    @Autowired EverNotePromptService everNotePromptService;
 
     @Test
     public void testBuildEverNoteSingleSummaryPromptWith_Empty_Response() {
         String prompt =
-                everNotePromptService.buildEverNoteSingleSummaryPrompt(
+                everNotePromptService.buildSingleSummaryPrompt(
                         EverNoteConstants.EVERNOTE_NOTES_SINGLE_SUMMARY_PROMPT_TEMPLATE,
                         "这是一段笔记的总结内容",
                         10);
@@ -28,7 +26,7 @@ public class EverNotePromptServiceImplTest {
     @Test
     public void testBuildEverNoteSingleSummaryPromptWith_Note_Extract() {
         String prompt =
-                everNotePromptService.buildEverNoteSingleSummaryPrompt(
+                everNotePromptService.buildSingleSummaryPrompt(
                         EverNoteConstants.EVERNOTE_NOTES_SINGLE_SUMMARY_PROMPT_TEMPLATE,
                         "这是一段笔记的总结内容",
                         30);
@@ -39,7 +37,7 @@ public class EverNotePromptServiceImplTest {
     @Test
     public void testBuildEverNoteSingleSummaryPromptWithout_Note_Extract() {
         String prompt =
-                everNotePromptService.buildEverNoteSingleSummaryPrompt(
+                everNotePromptService.buildSingleSummaryPrompt(
                         EverNoteConstants.EVERNOTE_NOTES_SINGLE_SUMMARY_PROMPT_TEMPLATE,
                         "这是一段笔记的总结内容",
                         40);
@@ -50,7 +48,7 @@ public class EverNotePromptServiceImplTest {
     @Test
     public void testBuildEverNoteWeeklySummaryPromptWith_Empty_Response() {
         String prompt =
-                everNotePromptService.buildEverNoteWeeklySummaryPrompt(
+                everNotePromptService.buildWeeklySummaryPrompt(
                         EverNoteConstants.EVERNOTE_NOTES_WEEKLY_SUMMARY_PROMPT_TEMPLATE,
                         mockNotes(),
                         10);
@@ -60,7 +58,7 @@ public class EverNotePromptServiceImplTest {
     @Test
     public void testBuildEverNoteWeeklySummaryPromptWith_Note_Ignore() {
         String prompt =
-                everNotePromptService.buildEverNoteWeeklySummaryPrompt(
+                everNotePromptService.buildWeeklySummaryPrompt(
                         EverNoteConstants.EVERNOTE_NOTES_WEEKLY_SUMMARY_PROMPT_TEMPLATE,
                         mockNotes(),
                         70);
@@ -77,7 +75,7 @@ public class EverNotePromptServiceImplTest {
     @Test
     public void testBuildEverNoteWeeklySummaryPromptWithout_Note_Ignore() {
         String prompt =
-                everNotePromptService.buildEverNoteWeeklySummaryPrompt(
+                everNotePromptService.buildWeeklySummaryPrompt(
                         EverNoteConstants.EVERNOTE_NOTES_WEEKLY_SUMMARY_PROMPT_TEMPLATE,
                         mockNotes(),
                         80);

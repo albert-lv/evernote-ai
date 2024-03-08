@@ -1,10 +1,10 @@
-package org.albert.evernote.ai.service.impl;
+package org.albert.evernote.ai.service.llm.impl;
 
 import io.github.resilience4j.retry.annotation.Retry;
 import java.io.IOException;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.albert.evernote.ai.service.LlmService;
+import org.albert.evernote.ai.service.llm.LlmService;
 import org.springframework.ai.chat.ChatResponse;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.UserMessage;

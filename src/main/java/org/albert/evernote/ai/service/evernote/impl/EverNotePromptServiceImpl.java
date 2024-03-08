@@ -1,8 +1,8 @@
-package org.albert.evernote.ai.service.impl;
+package org.albert.evernote.ai.service.evernote.impl;
 
 import java.util.Formatter;
 import java.util.List;
-import org.albert.evernote.ai.service.EverNotePromptService;
+import org.albert.evernote.ai.service.evernote.EverNotePromptService;
 import org.albert.evernote.ai.util.TokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service;
 public class EverNotePromptServiceImpl implements EverNotePromptService {
 
     @Override
-    public String buildEverNoteSingleSummaryPrompt(
-            String promptTemplate, String note, int tokenLimit) {
+    public String buildSingleSummaryPrompt(String promptTemplate, String note, int tokenLimit) {
         Formatter formatter = new Formatter();
         int currentTokenLength = TokenUtil.countTokens(promptTemplate);
         int leftTokenLength = tokenLimit - currentTokenLength;
@@ -30,7 +29,7 @@ public class EverNotePromptServiceImpl implements EverNotePromptService {
     }
 
     @Override
-    public String buildEverNoteWeeklySummaryPrompt(
+    public String buildWeeklySummaryPrompt(
             String promptTemplate, List<String> notes, int tokenLimit) {
         Formatter formatter = new Formatter();
         int totalTokenLength = TokenUtil.countTokens(promptTemplate);
@@ -48,5 +47,26 @@ public class EverNotePromptServiceImpl implements EverNotePromptService {
             sb.append(note).append("\n");
         }
         return formatter.format(promptTemplate, sb).toString();
+    }
+
+    @Override
+    public String buildRagPrompt(
+            String promptTemplate, String query, List<String> docs, int tokenLimit) {
+        Formatter formatter = new Formatter();
+        int totalTokenLength = TokenUtil.countTokens(promptTemplate) + TokenUtil.countTokens(query);
+        if (totalTokenLength >= tokenLimit) {
+            return StringUtils.EMPTY;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (String doc : docs) {
+            int noteTokenLength = TokenUtil.countTokens(doc);
+            if (totalTokenLength + noteTokenLength > tokenLimit) {
+                break;
+            }
+            totalTokenLength += noteTokenLength;
+            sb.append(doc).append("\n");
+        }
+        return formatter.format(promptTemplate, query, sb).toString();
     }
 }

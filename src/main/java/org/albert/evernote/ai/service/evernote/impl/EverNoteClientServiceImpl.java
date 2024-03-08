@@ -1,4 +1,4 @@
-package org.albert.evernote.ai.service.impl;
+package org.albert.evernote.ai.service.evernote.impl;
 
 import com.evernote.auth.EvernoteAuth;
 import com.evernote.auth.EvernoteService;
@@ -17,19 +17,18 @@ import io.github.resilience4j.retry.annotation.Retry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.albert.evernote.ai.service.EverNoteClientService;
+import org.albert.evernote.ai.service.evernote.EverNoteClientService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EverNoteClientServiceImpl implements EverNoteClientService {
 
+    public static final int MAX_COUNT = 499;
     private final NoteStoreClient noteStore;
 
     public EverNoteClientServiceImpl(@Value("${evernote.developer.token}") String developerToken)
-        throws TException, EDAMSystemException, EDAMUserException {
+            throws TException, EDAMSystemException, EDAMUserException {
         EvernoteAuth evernoteAuth = new EvernoteAuth(EvernoteService.YINXIANG, developerToken);
         ClientFactory factory = new ClientFactory(evernoteAuth);
         noteStore = factory.createNoteStoreClient();
@@ -40,16 +39,22 @@ public class EverNoteClientServiceImpl implements EverNoteClientService {
     public List<String> searchNotes(String query)
             throws TException, EDAMNotFoundException, EDAMSystemException, EDAMUserException {
         NoteFilter filter = new NoteFilter();
-        filter.setAscending(Boolean.FALSE);
         filter.setWords(query);
 
         NotesMetadataResultSpec spec = new NotesMetadataResultSpec();
         spec.setIncludeTitle(Boolean.TRUE);
+        spec.setIncludeAttributes(Boolean.TRUE);
 
-        NotesMetadataList ourNoteList = noteStore.findNotesMetadata(filter, 0, 100, spec);
+        NotesMetadataList metadataList;
+        List<NoteMetadata> allNotes = new ArrayList<>();
+        do {
+            metadataList = noteStore.findNotesMetadata(filter, allNotes.size(), MAX_COUNT, spec);
+            allNotes.addAll(metadataList.getNotes());
+        } while (allNotes.size() < metadataList.getTotalNotes()
+                && metadataList.getNotes().size() == MAX_COUNT);
 
         List<Note> notes = new ArrayList<>();
-        for (NoteMetadata noteMetadata : ourNoteList.getNotes()) {
+        for (NoteMetadata noteMetadata : metadataList.getNotes()) {
             Note note =
                     noteStore.getNote(
                             noteMetadata.getGuid(),
@@ -63,5 +68,31 @@ public class EverNoteClientServiceImpl implements EverNoteClientService {
         return notes.stream()
                 .map(note -> note.getTitle() + "\n\n" + note.getContent())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<NoteMetadata> searchNoteMetadata(String query)
+            throws TException, EDAMNotFoundException, EDAMSystemException, EDAMUserException {
+        NoteFilter filter = new NoteFilter();
+        filter.setWords(query);
+
+        NotesMetadataResultSpec spec = new NotesMetadataResultSpec();
+        spec.setIncludeTitle(Boolean.TRUE);
+        spec.setIncludeAttributes(Boolean.TRUE);
+
+        NotesMetadataList metadataList;
+        List<NoteMetadata> allNotes = new ArrayList<>();
+        do {
+            metadataList = noteStore.findNotesMetadata(filter, allNotes.size(), MAX_COUNT, spec);
+            allNotes.addAll(metadataList.getNotes());
+        } while (allNotes.size() < metadataList.getTotalNotes()
+                && metadataList.getNotes().size() == MAX_COUNT);
+        return metadataList.getNotes();
+    }
+
+    @Override
+    public Note getNote(String guid)
+            throws TException, EDAMNotFoundException, EDAMSystemException, EDAMUserException {
+        return noteStore.getNote(guid, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
     }
 }

@@ -1,0 +1,7 @@
+DocumentServiceImplTest.class.getClassLoader().getResourceAsStream() 和 DocumentServiceImplTest.class.getResourceAsStream() 是Java中用于从类路径获取资源文件的两种方法，它们之间有一些关键的区别：
+资源查找的起点不同:
+DocumentServiceImplTest.class.getClassLoader().getResourceAsStream(name)：从类的类加载器的类路径的根目录开始查找资源。这意味着资源应该位于类路径的根目录下，或者如果你使用的是相对路径，它是相对于类加载器的根目录的。
+DocumentServiceImplTest.class.getResourceAsStream(name)：从加载该类的位置开始查找资源。这意味着资源应该位于与该类相同的包目录下，或者如果你使用的是相对路径，它是相对于该类的包目录的。
+路径的表示方式不同:
+使用getClassLoader().getResourceAsStream()时，路径不应该以斜杠（/）开头，因为它是从类路径的根目录开始的。如果你以斜杠开头，它可能会被视为绝对路径，这取决于具体的类加载器实现。
+使用getResourceAsStream()时，路径可以以斜杠（/）开头，这表示从类路径的根目录开始查找；也可以不以斜杠开头，这表示从当前类的包目录开始查找。

@@ -11,8 +11,8 @@
 	<groupId>org.albert</groupId>
 	<artifactId>evernote-ai</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>one-api</name>
-	<description>One API for AI</description>
+	<name>evernote-ai</name>
+	<description>EverNote AI</description>
 	<properties>
 		<java.version>21</java.version>
 		<spring-ai.version>0.8.0-SNAPSHOT</spring-ai.version>
@@ -20,6 +20,10 @@
 		<evernote.version>1.25.1</evernote.version>
 		<jtokkit.version>1.0.0</jtokkit.version>
 		<spotless.version>2.43.0</spotless.version>
+		<milvus.version>2.3.4</milvus.version>
+		<tika.version>2.9.0</tika.version>
+		<chardet.version>1.0.3</chardet.version>
+		<guava.version>33.0.0-jre</guava.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -33,12 +37,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
-			<artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
-			<version>${spring-ai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.ai</groupId>
-			<artifactId>spring-ai-vertex-ai-spring-boot-starter</artifactId>
+			<artifactId>spring-ai-transformers</artifactId>
 			<version>${spring-ai.version}</version>
 		</dependency>
 		<dependency>
@@ -56,6 +55,31 @@
 			<artifactId>jtokkit</artifactId>
 			<version>${jtokkit.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>io.milvus</groupId>
+			<artifactId>milvus-sdk-java</artifactId>
+			<version>${milvus.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>
+			<version>${tika.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-parsers-standard-package</artifactId>
+			<version>${tika.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.juniversalchardet</groupId>
+			<artifactId>juniversalchardet</artifactId>
+			<version>${chardet.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -67,7 +91,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+  </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

@@ -1,4 +1,4 @@
-package org.albert.evernote.ai.service;
+package org.albert.evernote.ai.service.llm;
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 9.7.12 (474157)"/><meta name="keywords" content="105 技能, 107 职业"/><meta name="created" content="2021-05-21 13:53:10 +0000"/><meta name="source" content="web.clip7"/><meta name="source-application" content="webclipper.evernote"/><meta name="source-url" content="https://blog.dnsimple.com/2019/01/two-years-of-squash-merge/"/><meta name="updated" content="2021-05-21 13:53:10 +0000"/><title>Two years of squash merge - DNSimple Blog</title></head><body>
+  <div style="--en-clipped-content:article">
+<div><br/></div><div style="font-size: 16px; display:block; min-width: 100%; position: relative;"> <div style="line-height:1.15;box-sizing:border-box;"><div title="BODY clearly_highlighting_enabled.en-serialize-target-99284" style="box-sizing:border-box;font-family:-apple-system, BlinkMacSystemFont, &quot;avenir next&quot;, avenir, &quot;helvetica neue&quot;, helvetica, ubuntu, roboto, noto, &quot;segoe ui&quot;, arial, sans-serif;font-size:100%;line-height:1.6;color:rgb(51, 51, 51);background-color:rgb(242, 243, 245);">
+  <div title="DIV mw9.center.pv3.ph3.ph3-m.ph5-ns" style="box-sizing:border-box;max-width:1536px;padding-top:16px;padding-bottom:16px;margin-left:auto;margin-right:auto;padding-left:64px;padding-right:64px;">
+  <div title="DIV flex.flex-wrap.justify-between.items-center.pt2" style="box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;padding-top:8px;">
+    <div title="DIV " style="box-sizing:border-box;">
+      <a href="https://blog.dnsimple.com/" title="A " style="background-color:transparent;box-sizing:border-box;color:rgb(25, 95, 231);"><en-media type="application/octet-stream" hash="d41d8cd98f00b204e9800998ecf8427e" title="IMG v-mid.pr3-ns" width="172" height="24" style="border-style:none;max-width:100%;vertical-align:middle;padding-right:16px;"/></a>
+      <span title="SPAN dn.dib-l.pt2.pt0-ns.black-50" style="color:rgba(0, 0, 0, 0.5);padding-top:0px;display:inline-block;">Lessons learned from buying, connecting, and operating domains</span>
+    </div>
+    <div title="DIV " style="box-sizing:border-box;margin-left:auto;">
+      <a href="https://dnsimple.com/" title="A link.br2.ph3.ph4-ns.pv1.pv2-ns.dib.white.bg-blue.hover-white.b" style="box-sizing:border-box;font-weight:700;border-top-left-radius:4px;border-top-right-radius:4px;border-bottom-right-radius:4px;border-bottom-left-radius:4px;display:inline-block;text-decoration:none;color:rgb(255, 255, 255);background-color:rgb(53, 126, 221);padding-top:8px;padding-bottom:8px;padding-left:32px;padding-right:32px;transition:color 0.15s ease-in;">Free Trial</a>
+    </div>
+  </div>
+</div>
+
+
+
+<div title="DIV mw8.center.pv3.pv4-m.pv6-ns.ph3" style="box-sizing:border-box;max-width:1024px;padding-left:16px;padding-right:16px;margin-left:auto;margin-right:auto;padding-top:128px;padding-bottom:128px;">
+  <span title="SPAN tracked.ttu.f7" style="letter-spacing:0.1em;text-transform:uppercase;font-size:12px;">Engineering</span>
+  <h1 title="H1 ma0.f1.f1-m.f-subheadline-ns.lh-solid" style="box-sizing:border-box;font-weight:900;line-height:1;margin:0px;font-size:80px;">Two years of squash merge</h1>
+  <div title="DIV pt3" style="box-sizing:border-box;padding-top:16px;">
+    <img title="IMG br-100.v-mid.mr2" src="https://secure.gravatar.com/avatar/0b7204d9b71080886799495565d77223?s=40" width="0" height="0" style="border-style:none;max-width:100%;border-top-left-radius:100%;border-top-right-radius:100%;border-bottom-right-radius:100%;border-bottom-left-radius:100%;margin-right:8px;vertical-align:middle;"/>
+    <span>Simone Carletti</span>
+    <span title="SPAN gray" style="color:rgb(119, 119, 119);">— <span>24 January 2019</span></span>
+  </div>
+</div>
+
+<div title="DIV mw7.center.ph3" style="box-sizing:border-box;max-width:768px;padding-left:16px;padding-right:16px;margin-left:auto;margin-right:auto;">
+  <div title="DIV f5.f4-ns.lh-copy" style="box-sizing:border-box;line-height:1.5;font-size:20px;">
+    <p title="P " style="box-sizing:border-box;">At DNSimple <a href="https://blog.dnsimple.com/2017/06/power-of-the-pull-request/" title="A " style="background-color:transparent;box-sizing:border-box;color:rgb(25, 95, 231);">we use pull-requests every day</a> as a standard workflow to propose, review, and submit changes to almost any git repository. For most core repositories, such as the DNSimple web application, or our Chef-based infrastructure, our policy is to not commit to master, but make changes into a separate branch, open a pull request, obtain a review from one or two people (depending on the change), and then merge the branch into master before deploying.</p>
+
+<p title="P " style="box-sizing:border-box;">A little more than two years ago, we decided to change the development team's workflow to always use <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git --squash merge</code>. In this post I will highlight the reasons for this decision, how it worked for us, and what the benefits are.</p>
+
+<h2 title="H2 " style="box-sizing:border-box;margin-top:48px;margin-bottom:16px;">git merge: fast-forward, recursive, and squash</h2>
+
+<p title="P " style="box-sizing:border-box;">Before we get into the details of why we adopted the <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">--squash</code> merge, let's have a quick look at the most common merge strategies in git.</p>
+
+<p title="P " style="box-sizing:border-box;">Note: this is definitely not a comprehensive explanation of the <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git merge</code> command. For more in-depth explanations, take a look at the documentation for <a href="https://git-scm.com/docs/git-merge" title="A " style="background-color:transparent;box-sizing:border-box;color:rgb(25, 95, 231);"><code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git merge</code></a>.</p>
+
+<p title="P " style="box-sizing:border-box;">First of all, the purpose of <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git merge</code> is to incorporate the changes from another branch into the current one. For simplicity, we'll assume we want to merge a branch containing our changes called <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">bugfix</code> into the branch <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">master</code>.</p>
+
+<h3 title="H3 " style="box-sizing:border-box;margin-top:32px;margin-bottom:16px;">fast-forward</h3>
+
+<p title="P " style="box-sizing:border-box;">If <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">master</code> has not diverged from the branch, when it's time to merge git will simply move the reference of <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">master</code> forward to the last commit of the <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">bugfix</code> branch.</p>
+
+<div title="DIV language-plaintext.highlighter-rouge" style="box-sizing:border-box;"><div title="DIV highlight" style="box-sizing:border-box;"><pre title="PRE highlight" style="font-family:monospace, monospace;font-size:1em;box-sizing:border-box;overflow-x:auto;display:block;padding:12px;border:1px solid rgb(204, 204, 204);margin-bottom:1.8em;background-color:rgb(255, 255, 255);color:rgb(51, 51, 51);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;"><code title="CODE " style="box-sizing:border-box;padding:2px 4px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;background-position:0px 0px;white-space:pre;border:none;">        C - D - E           bugfix
+      /
+A - B                       master
+</code></pre></div></div>
+
+<p title="P " style="box-sizing:border-box;">After <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git merge</code>:</p>
+
+<div title="DIV language-plaintext.highlighter-rouge" style="box-sizing:border-box;"><div title="DIV highlight" style="box-sizing:border-box;"><pre title="PRE highlight" style="font-family:monospace, monospace;font-size:1em;box-sizing:border-box;overflow-x:auto;display:block;padding:12px;border:1px solid rgb(204, 204, 204);margin-bottom:1.8em;background-color:rgb(255, 255, 255);color:rgb(51, 51, 51);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;"><code title="CODE " style="box-sizing:border-box;padding:2px 4px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;background-position:0px 0px;white-space:pre;border:none;">A - B - C - D - E           master/bugfix
+</code></pre></div></div>
+
+<p title="P " style="box-sizing:border-box;">Here's the output of the merge:</p>
+
+<div title="DIV language-plaintext.highlighter-rouge" style="box-sizing:border-box;"><div title="DIV highlight" style="box-sizing:border-box;"><pre title="PRE highlight" style="font-family:monospace, monospace;font-size:1em;box-sizing:border-box;overflow-x:auto;display:block;padding:12px;border:1px solid rgb(204, 204, 204);margin-bottom:1.8em;background-color:rgb(255, 255, 255);color:rgb(51, 51, 51);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;"><code title="CODE " style="box-sizing:border-box;padding:2px 4px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;background-position:0px 0px;white-space:pre;border:none;">➜  merge-examples git:(master) git merge --ff bugfix
+Updating 9db2ac7..3452cab
+Fast-forward
+</code></pre></div></div>
+
+<p title="P " style="box-sizing:border-box;">This is known as <a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging" title="A " style="background-color:transparent;box-sizing:border-box;color:rgb(25, 95, 231);"><em>fast forward</em></a>.</p>
+
+<h3 title="H3 " style="box-sizing:border-box;margin-top:32px;margin-bottom:16px;">No fast-forward</h3>
+
+<p title="P " style="box-sizing:border-box;">The default behavior of Git is to use fast-forwarding whenever possible. However, it's possible to change this behavior in the git configuration or passing the <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">--no-ff</code> (no fast-forward) option to <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git merge</code>. As a result, even if git detects that master did not diverge, it will create a merge commit.</p>
+
+<div title="DIV language-plaintext.highlighter-rouge" style="box-sizing:border-box;"><div title="DIV highlight" style="box-sizing:border-box;"><pre title="PRE highlight" style="font-family:monospace, monospace;font-size:1em;box-sizing:border-box;overflow-x:auto;display:block;padding:12px;border:1px solid rgb(204, 204, 204);margin-bottom:1.8em;background-color:rgb(255, 255, 255);color:rgb(51, 51, 51);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;"><code title="CODE " style="box-sizing:border-box;padding:2px 4px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;background-position:0px 0px;white-space:pre;border:none;">        C - D - E           bugfix
+      /
+A - B                       master
+</code></pre></div></div>
+
+<p title="P " style="box-sizing:border-box;">After <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git merge --no-ff</code>:</p>
+
+<div title="DIV language-plaintext.highlighter-rouge" style="box-sizing:border-box;"><div title="DIV highlight" style="box-sizing:border-box;"><pre title="PRE highlight" style="font-family:monospace, monospace;font-size:1em;box-sizing:border-box;overflow-x:auto;display:block;padding:12px;border:1px solid rgb(204, 204, 204);margin-bottom:1.8em;background-color:rgb(255, 255, 255);color:rgb(51, 51, 51);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;"><code title="CODE " style="box-sizing:border-box;padding:2px 4px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;background-position:0px 0px;white-space:pre;border:none;">        C - D - E           bugfix
+      /           \
+A - B ------------ F        master
+</code></pre></div></div>
+
+<p title="P " style="box-sizing:border-box;">Here's the output of the merge:</p>
+
+<div title="DIV language-plaintext.highlighter-rouge" style="box-sizing:border-box;"><div title="DIV highlight" style="box-sizing:border-box;"><pre title="PRE highlight" style="font-family:monospace, monospace;font-size:1em;box-sizing:border-box;overflow-x:auto;display:block;padding:12px;border:1px solid rgb(204, 204, 204);margin-bottom:1.8em;background-color:rgb(255, 255, 255);color:rgb(51, 51, 51);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;"><code title="CODE " style="box-sizing:border-box;padding:2px 4px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;background-position:0px 0px;white-space:pre;border:none;">➜  merge-examples git:(master) git merge --no-ff bugfix
+Already up to date!
+Merge made by the 'recursive' strategy.
+</code></pre></div></div>
+
+<h3 title="H3 " style="box-sizing:border-box;margin-top:32px;margin-bottom:16px;">Recursive strategy</h3>
+
+<p title="P " style="box-sizing:border-box;">So far, we assumed that master never diverged from the <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">bugfix</code> branch. However, this is quite unlikely, even in a small size team with multiple developers working on several different changes at the same time. Take the following example:</p>
+
+<div title="DIV language-plaintext.highlighter-rouge" style="box-sizing:border-box;"><div title="DIV highlight" style="box-sizing:border-box;"><pre title="PRE highlight" style="font-family:monospace, monospace;font-size:1em;box-sizing:border-box;overflow-x:auto;display:block;padding:12px;border:1px solid rgb(204, 204, 204);margin-bottom:1.8em;background-color:rgb(255, 255, 255);color:rgb(51, 51, 51);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;"><code title="CODE " style="box-sizing:border-box;padding:2px 4px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;background-position:0px 0px;white-space:pre;border:none;">        C - D - E           bugfix
+      /
+A - B - F - G               master
+</code></pre></div></div>
+
+<p title="P " style="box-sizing:border-box;">The commits <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">F</code> and <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">G</code> caused <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">master</code> to diverge from <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">bugfix</code>. Therefore, <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git</code> can't simply fast-forward the reference to <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">E</code> or it will lose those 2 commits.</p>
+
+<p title="P " style="box-sizing:border-box;">In this case, <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git</code> will (generally) adopt a <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">recursive</code> merge strategy. The result is a merge commit that joins the two histories together:</p>
+
+<div title="DIV language-plaintext.highlighter-rouge" style="box-sizing:border-box;"><div title="DIV highlight" style="box-sizing:border-box;"><pre title="PRE highlight" style="font-family:monospace, monospace;font-size:1em;box-sizing:border-box;overflow-x:auto;display:block;padding:12px;border:1px solid rgb(204, 204, 204);margin-bottom:1.8em;background-color:rgb(255, 255, 255);color:rgb(51, 51, 51);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;"><code title="CODE " style="box-sizing:border-box;padding:2px 4px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;background-position:0px 0px;white-space:pre;border:none;">        C - D - E           bugfix
+      /           \
+A - B - F - G ----- H       master
+</code></pre></div></div>
+
+<p title="P " style="box-sizing:border-box;">Here's the output of the merge:</p>
+
+<div title="DIV language-plaintext.highlighter-rouge" style="box-sizing:border-box;"><div title="DIV highlight" style="box-sizing:border-box;"><pre title="PRE highlight" style="font-family:monospace, monospace;font-size:1em;box-sizing:border-box;overflow-x:auto;display:block;padding:12px;border:1px solid rgb(204, 204, 204);margin-bottom:1.8em;background-color:rgb(255, 255, 255);color:rgb(51, 51, 51);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;"><code title="CODE " style="box-sizing:border-box;padding:2px 4px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;background-position:0px 0px;white-space:pre;border:none;">➜  merge-examples git:(master) git merge --no-ff bugfix
+Already up to date!
+Merge made by the 'recursive' strategy.
+</code></pre></div></div>
+
+<h3 title="H3 " style="box-sizing:border-box;margin-top:32px;margin-bottom:16px;">Squash merge</h3>
+
+<p title="P " style="box-sizing:border-box;">Squash merge is a different merge approach. The commits of the merged branch are <em>squashed</em> into one and applied to the target branch. Here's an example:</p>
+
+<div title="DIV language-plaintext.highlighter-rouge" style="box-sizing:border-box;"><div title="DIV highlight" style="box-sizing:border-box;"><pre title="PRE highlight" style="font-family:monospace, monospace;font-size:1em;box-sizing:border-box;overflow-x:auto;display:block;padding:12px;border:1px solid rgb(204, 204, 204);margin-bottom:1.8em;background-color:rgb(255, 255, 255);color:rgb(51, 51, 51);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;"><code title="CODE " style="box-sizing:border-box;padding:2px 4px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;background-position:0px 0px;white-space:pre;border:none;">        C - D - E           bugfix
+      /
+A - B - F - G               master
+</code></pre></div></div>
+
+<p title="P " style="box-sizing:border-box;">After <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git merge --squash &amp;&amp; git commit</code>:</p>
+
+<div title="DIV language-plaintext.highlighter-rouge" style="box-sizing:border-box;"><div title="DIV highlight" style="box-sizing:border-box;"><pre title="PRE highlight" style="font-family:monospace, monospace;font-size:1em;box-sizing:border-box;overflow-x:auto;display:block;padding:12px;border:1px solid rgb(204, 204, 204);margin-bottom:1.8em;background-color:rgb(255, 255, 255);color:rgb(51, 51, 51);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;"><code title="CODE " style="box-sizing:border-box;padding:2px 4px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;background-position:0px 0px;white-space:pre;border:none;">        C - D - E           bugfix
+      /
+A - B - F - G - CDE         master
+</code></pre></div></div>
+
+<p title="P " style="box-sizing:border-box;">where <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">CDE</code> is a single commit combining all the changes of <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">C + D + E</code>. Squashing retains the changes but discards all the individual commits of the <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">bugfix</code> branch.</p>
+
+<p title="P " style="box-sizing:border-box;">Note that <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git merge --squash</code> prepares the merge but does not actually make a commit. You will need to execute <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git commit</code> to create the merge commit. <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git</code> has already prepared the commit message to contain the messages of all the squashed commits.</p>
+
+<h2 title="H2 " style="box-sizing:border-box;margin-top:48px;margin-bottom:16px;">What problem are we trying to solve?</h2>
+
+<p title="P " style="box-sizing:border-box;">The main reason we decided to give <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">--squash merge</code> a try was to improve repository commit history quality.</p>
+
+<p title="P " style="box-sizing:border-box;">Commits are essentially immutable. Technically there are ways to rewrite the history, but there are several reasons you generally don't want to do it. For the sake of simplicity, let's say the farther the commit is in the repository history, the more complicated it is to rewrite it.</p>
+
+<p title="P " style="box-sizing:border-box;">It's important to write good commits because they are the pillar of your git history. It's hard to perfectly define what makes a commit <em>a good commit</em>, but in my experience, a good commit satisfies at least the following requirements:</p>
+
+<ol title="OL " style="box-sizing:border-box;">
+  <li title="LI " style="box-sizing:border-box;">Combines all the code changes related to a single logical change (it could be a feature, a bugfix, or an individual change part of a bigger change)</li>
+  <li title="LI " style="box-sizing:border-box;">Provides an explanatory commit message that helps people understand the intent of the change</li>
+  <li title="LI " style="box-sizing:border-box;">If you pick this commit independently from the history, it makes sense on its own</li>
+</ol>
+
+<p title="P " style="box-sizing:border-box;">Requirement one should be your default coding habit. A commit should represent an atomic change, and you should avoid combining multiple changes that are not related each other. Although this seems obvious, I've seen commits that change the compilation script as well as introduce a new feature in the app. Let's use another more practical example: you are fixing a bug, so we want the changes to the software to be committed along with the regression tests, not in different commits that are not related to each other.</p>
+
+<p title="P " style="box-sizing:border-box;">Requirement two is a very well-known problem. There are hundreds of articles trying to define a <em>good commit messsage</em> and trying to teach the programmer the art of writing a good commit message. The <a href="https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project" title="A " style="background-color:transparent;box-sizing:border-box;color:rgb(25, 95, 231);">official git contributing page</a> has some guidelines:</p>
+
+<div title="DIV language-plaintext.highlighter-rouge" style="box-sizing:border-box;"><div title="DIV highlight" style="box-sizing:border-box;"><pre title="PRE highlight" style="font-family:monospace, monospace;font-size:1em;box-sizing:border-box;overflow-x:auto;display:block;padding:12px;border:1px solid rgb(204, 204, 204);margin-bottom:1.8em;background-color:rgb(255, 255, 255);color:rgb(51, 51, 51);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;"><code title="CODE " style="box-sizing:border-box;padding:2px 4px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;background-position:0px 0px;white-space:pre;border:none;">Short (50 chars or less) summary of changes
+
+More detailed explanatory text, if necessary.  Wrap it to
+about 72 characters or so.  In some contexts, the first
+line is treated as the subject of an email and the rest of
+the text as the body.  The blank line separating the
+summary from the body is critical (unless you omit the body
+entirely); tools like rebase can get confused if you run
+the two together.
+
+Further paragraphs come after blank lines.
+
+  - Bullet points are okay, too
+
+  - Typically a hyphen or asterisk is used for the bullet,
+    preceded by a single space, with blank lines in
+    between, but conventions vary here
+</code></pre></div></div>
+
+<p title="P " style="box-sizing:border-box;">These guidelines are extracted from an <a href="https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html" title="A " style="background-color:transparent;box-sizing:border-box;color:rgb(25, 95, 231);">article written by Tim Pope back in 2008</a>. It's probably the oldest article I can remember on this matter.</p>
+
+<p title="P " style="box-sizing:border-box;">So we've seen that writing good commit messages seems to be a hard rule to follow. We've also seen that there are some objective metrics you can follow, and some tools enforce or encourage these metrics:</p>
+
+<p title="P " style="box-sizing:border-box;"><img src="Two%20years%20of%20squash%20merge%20-%20DNSimple%20Blog.resources/squashmerge-commit-rules.png" height="412" width="1010"/></p>
+
+<p title="P " style="box-sizing:border-box;">However, writing a good commit message is hard because it's not just a matter of following objective metrics. You can write a perfectly formatted but completely useless commit message:</p>
+
+<p title="P " style="box-sizing:border-box;"><img src="Two%20years%20of%20squash%20merge%20-%20DNSimple%20Blog.resources/squashmerge-stupid-commit-message.png" height="524" width="998"/></p>
+
+<p title="P " style="box-sizing:border-box;">OK, an even more useless one:</p>
+
+<p title="P " style="box-sizing:border-box;"><img src="Two%20years%20of%20squash%20merge%20-%20DNSimple%20Blog.resources/squashmerge-generic-commit-message.png" height="395" width="1002"/></p>
+
+<p title="P " style="box-sizing:border-box;">Raise your hand if you ever created a commit with a message <em>Fix test</em>, <em>Fix CI</em>, <em>Change foo</em>, <em>Add bar</em>.</p>
+
+<p title="P " style="box-sizing:border-box;">What is wrong with this commit message, you may be asking. This brings us to requirement three. A good commit (and a good commit message) is one that if you select that commit at any point in time from the hundreds of commits in the repository, it will make sense on its own (or will provide enough information to reconstruct the reason of the change).</p>
+
+<p title="P " style="box-sizing:border-box;">Let's do an experiment. Can you tell me what this change is about?</p>
+
+<p title="P " style="box-sizing:border-box;"><img src="Two%20years%20of%20squash%20merge%20-%20DNSimple%20Blog.resources/squashmerge-bad-commit-fix.png" height="750" width="998"/></p>
+
+<p title="P " style="box-sizing:border-box;">Indeed it fixes some specs with the goal to make them pass. But imagine if someone stumbles upon the changes on line 286 at some point 3 years from now. Neither the commit message nor the code explain why the specs were broken, when they were broken, what broke them, and why the change at line 286 was required. In isolation, this commit is quite meaningless.</p>
+
+<p title="P " style="box-sizing:border-box;">Another common example of not very helpful messages is the first one in this history:</p>
+
+<p title="P " style="box-sizing:border-box;"><img src="Two%20years%20of%20squash%20merge%20-%20DNSimple%20Blog.resources/squashmerge-bad-commit-dependencies.png" height="202" width="957"/></p>
+
+<p title="P " style="box-sizing:border-box;">Imagine you are navigating through the list of hundreds of commits trying to investigate when and why something broke. I think you would agree that the effort required to determine whether the first commit could be a candidate to examine is higher than the third commit. From the message point of view, it requires you to (at least) open the commit to examine the changes.</p>
+
+<p title="P " style="box-sizing:border-box;">Furthermore, the first commit may also break requirement one, because it includes several changes in the same commit. You may argue that <em>updating multiple dependencies</em> is a single logical change, but if that's the case, you are probably underestimating the impact of changing even a single dependency in a large project.</p>
+
+<h2 title="H2 " style="box-sizing:border-box;margin-top:48px;margin-bottom:16px;">Advantages of git squash merge</h2>
+
+<p title="P " style="box-sizing:border-box;">Now that we know the problem, let's see how squash merge can help us.</p>
+
+<p title="P " style="box-sizing:border-box;">As I explained before, using squash merge will bundle up all the changes in a single commit, also giving us the chance to write a fresh, complete commit message that properly describes the intent of the changes.</p>
+
+<p title="P " style="box-sizing:border-box;">Using commit messages is a great way to limit the presence of isolated changesets in your codebase. It drastically improves the quality of the code that is living on the primary repository branch, ensuring only independent, self-contained changesets are present.</p>
+
+<p title="P " style="box-sizing:border-box;">Here's an example of what the history of the DNSimple app looks like:</p>
+
+<p title="P " style="box-sizing:border-box;"><img src="Two%20years%20of%20squash%20merge%20-%20DNSimple%20Blog.resources/squashmerge-history-good.png" height="485" width="1002"/></p>
+
+<p title="P " style="box-sizing:border-box;">In case you are wondering if we are losing the individual changes, the answer is no. Each squash merge references back to a PR where the whole changes are tracked:</p>
+
+<p title="P " style="box-sizing:border-box;"><img src="Two%20years%20of%20squash%20merge%20-%20DNSimple%20Blog.resources/squashmerge-history-pr.png" height="504" width="1022"/></p>
+
+<p title="P " style="box-sizing:border-box;">Occasionally, non-squash merge occurs. It happens. We're all human beings. But you can immediately see the difference when this happens:</p>
+
+<p title="P " style="box-sizing:border-box;"><img src="Two%20years%20of%20squash%20merge%20-%20DNSimple%20Blog.resources/squashmerge-history-confusing.png" height="479" width="988"/></p>
+
+<h2 title="H2 " style="box-sizing:border-box;margin-top:48px;margin-bottom:16px;">Questions &amp; Concerns</h2>
+
+<p title="P " style="box-sizing:border-box;">The use of squash merge is certainly not the only possible way to keep your version control history clean and readable. There are a number of best practices that each developer can adopt, individually or as a team. However, we found this feature to provide the best balance between simplicity, freedom, and results.</p>
+
+<p title="P " style="box-sizing:border-box;">If you've been reading all the way to this point, you certainly have questions or comments. Here's the most common one I heard:</p>
+
+<h4 title="H4 " style="box-sizing:border-box;margin-top:24px;margin-bottom:0px;">Aren't you discouraging individual commit quality?</h4>
+
+<p title="P " style="box-sizing:border-box;">No. Each committer is still encouraged to write good commits: combine together meaningful changes, along with explanatory commit messages. However, there is no peer pressure that a typo, a missing file, broken spec would end up cluttering the final primary branch.</p>
+
+<h4 title="H4 " style="box-sizing:border-box;margin-top:24px;margin-bottom:0px;">You could use <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git rebase</code>!</h4>
+
+<p title="P " style="box-sizing:border-box;">Yes, we can certainly use rebase to amend a commit message, or recombine commits. While this may work for local commits (and I frequently do it), rewriting the git history is discouraged once you've shared it (e.g. after you pushed it to the remote shared repository).</p>
+
+<p title="P " style="box-sizing:border-box;">In fact, to prevent issues with teammates and continuous intgration tools, we explicitly forbid rebasing your commits after you've pushed them. We don't allow <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git push --force</code> either. The only use case for <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">--force</code> or <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git rebase</code> is in the rare case of severe issues that may compromise security or stability of the repository. But that's an exceptional use case.</p>
+
+<h4 title="H4 " style="box-sizing:border-box;margin-top:24px;margin-bottom:0px;">You can use short-living branches to avoid repetitive merge of master</h4>
+
+<p title="P " style="box-sizing:border-box;">No, this doesn't work. It does if you have very few developers, each working on individual branches. But when multiple developers are working on multiple-feature branches together, that doesn't scale. We encourage backporting master often into your branch to limit the risk of conflicts, and stay on top of the latest changes. For example, we continuously update dependencies. We also merge and ship on average 10 times a day.</p>
+
+<h2 title="H2 " style="box-sizing:border-box;margin-top:48px;margin-bottom:16px;">Conclusion</h2>
+
+<p title="P " style="box-sizing:border-box;">By using squash merge, we have been able to drastically improve the quality of our change history, turning our commit log into a very powerful tool to navigate:</p>
+
+<ol title="OL " style="box-sizing:border-box;">
+  <li title="LI " style="box-sizing:border-box;">
+    <p title="P " style="box-sizing:border-box;">We reduced (and in certain case even eliminated) the number of <em>fixme</em>, <em>fix previous commit</em>, <em>fix specs</em> commits to the repository. Mistakes happen, and the developer has full freedom to experiment, and even commit incomplete changesets in a branch with the full confidence that, once merged, only the final result will be shown.</p>
+  </li>
+  <li title="LI " style="box-sizing:border-box;">
+    <p title="P " style="box-sizing:border-box;">The development of feature branches is now much easier. We can cherry-pick, backport, and even periodically merge back master into a development branch, without worrying about all the various recursive merges showing up in the logs and cluttering the history.</p>
+
+    <p title="P " style="box-sizing:border-box;"><img src="Two%20years%20of%20squash%20merge%20-%20DNSimple%20Blog.resources/squashmerge-master-merge.png" height="566" width="1024"/></p>
+  </li>
+  <li title="LI " style="box-sizing:border-box;">
+    <p title="P " style="box-sizing:border-box;">We increased the confidence of non-developers or non-technical team members to contribute. In particular, we can leverage the use of web UI to edit files in place. The final merge is still subject to our peer review process, and it is the responsibility of the leading member to merge the final changeset with an appropriate message. A great example is our current copy editing process, as shown in the following screenshot:</p>
+
+    <p title="P " style="box-sizing:border-box;"><img src="Two%20years%20of%20squash%20merge%20-%20DNSimple%20Blog.resources/squashmerge-copy-editing.png" height="879" width="1013"/></p>
+  </li>
+  <li title="LI " style="box-sizing:border-box;">
+    <p title="P " style="box-sizing:border-box;">We simplified the rollback or revert process by packaging all the changes in a unique set at the very end of the git history.</p>
+  </li>
+  <li title="LI " style="box-sizing:border-box;">
+    <p title="P " style="box-sizing:border-box;">We facilitated all the tasks that require navigating historical commits (e.g. via <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git blame</code>), such as debugging, reviews, and cleanup of technical debt. The main reason is that all the changes related to a particular feature are not included in the same changeset. If you <code title="CODE language-plaintext.highlighter-rouge" style="box-sizing:border-box;padding:2px 4px;white-space:pre-wrap;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border:1px solid rgb(204, 204, 204);background-color:rgb(255, 255, 255);font-family:Consolas, Menlo, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;font-size:90%;">git blame</code> a particular line of code and go to the commit diff, you'll get exactly all the associated changes including: methods that were created, spec files that were touched, views that were updated, etc. No more cases where you research why a method signature was changed, and the only changes you see in the commit are the method signature edit and (hopefully) the corresponding spec.</p>
+  </li>
+</ol>
+
+<p title="P " style="box-sizing:border-box;">All these benefits result in a more maintainable code, less time spent chasing team members to get insights about why that line was changed, and more productivity with less stress.</p>
+
+    <p title="P pt3.i" style="box-sizing:border-box;font-style:italic;padding-top:16px;">
+      Share on <a href="http://twitter.com/share?text=Two%20years%20of%20squash%20merge&amp;url=https://blog.dnsimple.com/2019/01/two-years-of-squash-merge/" title="A " style="background-color:transparent;box-sizing:border-box;color:rgb(25, 95, 231);">Twitter</a>
+      and <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.dnsimple.com/2019/01/two-years-of-squash-merge/" title="A " style="background-color:transparent;box-sizing:border-box;color:rgb(25, 95, 231);">Facebook</a>
+    </p>
+    <div title="DIV pv5.f5" style="box-sizing:border-box;padding-top:64px;padding-bottom:64px;font-size:16px;">
+      <img title="IMG br-100.v-top.mr2" src="https://secure.gravatar.com/avatar/0b7204d9b71080886799495565d77223?s=60" width="0" height="0" style="border-style:none;max-width:100%;border-top-left-radius:100%;border-top-right-radius:100%;border-bottom-right-radius:100%;border-bottom-left-radius:100%;margin-right:8px;vertical-align:top;"/>
+      <div title="DIV dib" style="box-sizing:border-box;display:inline-block;">
+        <h4 title="H4 ma0" style="box-sizing:border-box;margin-top:1.5rem;margin-bottom:0px;margin:0px;">Simone Carletti</h4>
+        <p title="P ma0.measure" style="box-sizing:border-box;margin:0px;max-width:30em;">Italian software developer, a PADI scuba instructor and a former professional sommelier. I make awesome code and troll Anthony for fun and profit.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div title="DIV bg-white" style="box-sizing:border-box;background-color:rgb(255, 255, 255);">
+  <div title="DIV mw9.center.pv5.ph3.ph5-ns" style="box-sizing:border-box;max-width:1536px;padding-top:64px;padding-bottom:64px;margin-left:auto;margin-right:auto;padding-left:64px;padding-right:64px;">
+    <div title="DIV flex.flex-wrap.justify-between" style="box-sizing:border-box;display:flex;flex-wrap:wrap;justify-content:space-between;">
+    
+      
+      
+        
+        
+          
+<div title="DIV w-100.w-30-l.mb3.mr3.pr3.pv4" style="box-sizing:border-box;padding-right:16px;padding-top:32px;padding-bottom:32px;margin-right:16px;margin-bottom:16px;width:30%;">
+  <a href="https://blog.dnsimple.com/2021/05/dnsimple-as-secondary-dns-server/" title="A db.h-100.link.black.dim" style="background-color:transparent;box-sizing:border-box;display:block;height:100%;text-decoration:none;color:rgb(0, 0, 0);opacity:1;transition:color 0.15s ease-in;">
+    <div title="DIV h-100.flex.flex-column.justify-between" style="box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;height:100%;">
+      <div title="DIV " style="box-sizing:border-box;">
+        
+          <span title="SPAN f7.tracked.ttu.black-50" style="letter-spacing:0.1em;color:rgba(0, 0, 0, 0.5);text-transform:uppercase;font-size:12px;">Features</span>
+        
+        <h2 title="H2 f3.lh-title.ma0" style="box-sizing:border-box;margin-top:3rem;margin-bottom:1rem;line-height:1.25;margin:0px;font-size:24px;">DNSimple Now Supports Secondary DNS Hosting</h2>
+        <p title="P lh-copy" style="box-sizing:border-box;line-height:1.5;">Configure DNSimple as your secondary DNS provider to improve your domain's availability and redundancy with AXFR zone transfers.</p>
+      </div>
+      <div title="DIV pt3" style="box-sizing:border-box;padding-top:16px;">
+        <img title="IMG br-100.v-mid" src="https://s.gravatar.com/avatar/fcd3302682a7a8ba04b052cc8caecde3?s=40" width="0" height="0" style="border-style:none;max-width:100%;border-top-left-radius:100%;border-top-right-radius:100%;border-bottom-right-radius:100%;border-bottom-left-radius:100%;vertical-align:middle;"/>
+        <span>Ivan Bakalov</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+          
+        
+      
+        
+        
+          
+<div title="DIV w-100.w-30-l.mb3.mr3.pr3.pv4" style="box-sizing:border-box;padding-right:16px;padding-top:32px;padding-bottom:32px;margin-right:16px;margin-bottom:16px;width:30%;">
+  <a href="https://blog.dnsimple.com/2020/07/ten-tshirt/" title="A db.h-100.link.black.dim" style="background-color:transparent;box-sizing:border-box;display:block;height:100%;text-decoration:none;color:rgb(0, 0, 0);opacity:1;transition:color 0.15s ease-in;">
+    <div title="DIV h-100.flex.flex-column.justify-between" style="box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;height:100%;">
+      <div title="DIV " style="box-sizing:border-box;">
+        
+          <span title="SPAN f7.tracked.ttu.black-50" style="letter-spacing:0.1em;color:rgba(0, 0, 0, 0.5);text-transform:uppercase;font-size:12px;">Updates</span>
+        
+        <h2 title="H2 f3.lh-title.ma0" style="box-sizing:border-box;margin-top:3rem;margin-bottom:1rem;line-height:1.25;margin:0px;font-size:24px;">Celebrate 10 Years with a Free DNSimple T-Shirt</h2>
+        <p title="P lh-copy" style="box-sizing:border-box;line-height:1.5;">Get a free limited-edition t-shirt featuring the characters of howdns.works and howhttps.works with any new yearly subscription to DNSimple.</p>
+      </div>
+      <div title="DIV pt3" style="box-sizing:border-box;padding-top:16px;">
+        <img title="IMG br-100.v-mid" src="https://secure.gravatar.com/avatar/31254903db793bf6f84bbd607fe092fd?s=40" width="0" height="0" style="border-style:none;max-width:100%;border-top-left-radius:100%;border-top-right-radius:100%;border-bottom-right-radius:100%;border-bottom-left-radius:100%;vertical-align:middle;"/>
+        <span>Anthony Eden</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+          
+        
+      
+        
+        
+          
+<div title="DIV w-100.w-30-l.mb3.mr3.pr3.pv4" style="box-sizing:border-box;padding-right:16px;padding-top:32px;padding-bottom:32px;margin-right:16px;margin-bottom:16px;width:30%;">
+  <a href="https://blog.dnsimple.com/2019/07/https-redirector/" title="A db.h-100.link.black.dim" style="background-color:transparent;box-sizing:border-box;display:block;height:100%;text-decoration:none;color:rgb(0, 0, 0);opacity:1;transition:color 0.15s ease-in;">
+    <div title="DIV h-100.flex.flex-column.justify-between" style="box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;height:100%;">
+      <div title="DIV " style="box-sizing:border-box;">
+        
+          <span title="SPAN f7.tracked.ttu.black-50" style="letter-spacing:0.1em;color:rgba(0, 0, 0, 0.5);text-transform:uppercase;font-size:12px;">Features</span>
+        
+        <h2 title="H2 f3.lh-title.ma0" style="box-sizing:border-box;margin-top:3rem;margin-bottom:1rem;line-height:1.25;margin:0px;font-size:24px;">Announcing HTTPS Support for the DNSimple Redirector</h2>
+        <p title="P lh-copy" style="box-sizing:border-box;line-height:1.5;">Configure HTTPS redirects with our easy-to-use DNSimple Redirector and a certificate from your DNSimple account.</p>
+      </div>
+      <div title="DIV pt3" style="box-sizing:border-box;padding-top:16px;">
+        <img title="IMG br-100.v-mid" src="https://s.gravatar.com/avatar/76aa5b311fb40fdc2bb70c0282d66af3?s=40" width="0" height="0" style="border-style:none;max-width:100%;border-top-left-radius:100%;border-top-right-radius:100%;border-bottom-right-radius:100%;border-bottom-left-radius:100%;vertical-align:middle;"/>
+        <span>Luca Guidi</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+          
+        
+      
+        
+        
+      
+    
+    </div>
+  </div>
+</div>
+
+
+  <div title="FOOTER bg-navy.bg-pipes.pt5.pb5.white-80" style="box-sizing:border-box;color:rgba(255, 255, 255, 0.8);background-color:rgb(0, 27, 68);padding-bottom:64px;padding-top:64px;background-image:url(https://d33wubrfki0l68.cloudfront.net/assets/images/illustrations/57ba19f3490abc77957ca58b64a4ffe187979228/border.jpg);background-size:900px 10px;background-position:center top;background-repeat:repeat no-repeat;">
+    <div title="DIV mw9.center.pa3.ph5-ns" style="box-sizing:border-box;max-width:1536px;padding:16px;margin-left:auto;margin-right:auto;padding-left:64px;padding-right:64px;">
+      <div title="DIV flex.flex-wrap.justify-between" style="box-sizing:border-box;display:flex;flex-wrap:wrap;justify-content:space-between;">
+        <div title="DIV w-100.w-70-ns.tc.tl-ns" style="box-sizing:border-box;width:70%;text-align:left;">
+          <en-media type="application/octet-stream" hash="d41d8cd98f00b204e9800998ecf8427e" title="IMG " width="103" height="35" style="border-style:none;max-width:100%;"/>
+          <h2 title="H2 white.ma0.pt2.pb2.b" style="box-sizing:border-box;font-weight:700;margin-top:3rem;margin-bottom:1rem;color:rgb(255, 255, 255);padding-bottom:8px;padding-top:8px;margin:0px;">Get Help From Developers</h2>
+          <p title="P measure" style="box-sizing:border-box;max-width:30em;">Everyone at DNSimple enjoys writing blog posts.<br/>We love simplifying your domain management, too.<br/></p>
+          <a href="https://dnsimple.com/" title="A link.grow.br2.ph4.pv3.mb2.dib.white.bg-blue.hover-white.b" style="box-sizing:border-box;font-weight:700;border-top-left-radius:4px;border-top-right-radius:4px;border-bottom-right-radius:4px;border-bottom-left-radius:4px;display:inline-block;text-decoration:none;color:rgb(255, 255, 255);background-color:rgb(53, 126, 221);padding-top:16px;padding-bottom:16px;padding-left:32px;padding-right:32px;margin-bottom:8px;-webkit-backface-visibility:hidden;transform:translateZ(0px);transition:color 0.15s ease-in;">Start your 30-day free trial today</a>
+        </div>
+        <div title="DIV w-100.w-30-ns.tc.tl-ns" style="box-sizing:border-box;width:30%;text-align:left;">
+          <div title="NAV " style="box-sizing:border-box;">
+            <a href="https://dnsimple.com/" title="A pb2.db.link.white-80.hover-white" style="background-color:transparent;box-sizing:border-box;display:block;text-decoration:none;color:rgba(255, 255, 255, 0.8);padding-bottom:8px;transition:color 0.15s ease-in;">DNSimple.com</a>
+            <a href="https://support.dnsimple.com/" title="A pb2.db.link.white-80.hover-white" style="background-color:transparent;box-sizing:border-box;display:block;text-decoration:none;color:rgba(255, 255, 255, 0.8);padding-bottom:8px;transition:color 0.15s ease-in;">Support</a>
+            <a href="https://dnsimple.com/contact" title="A pb2.db.link.white-80.hover-white" style="background-color:transparent;box-sizing:border-box;display:block;text-decoration:none;color:rgba(255, 255, 255, 0.8);padding-bottom:8px;transition:color 0.15s ease-in;">Contact</a>
+            <a href="http://dnsimplestatus.com/" title="A pb2.db.link.white-80.hover-white" style="background-color:transparent;box-sizing:border-box;display:block;text-decoration:none;color:rgba(255, 255, 255, 0.8);padding-bottom:8px;transition:color 0.15s ease-in;">Status</a>
+            <a href="https://developer.dnsimple.com/" title="A db.link.white-80.hover-white" style="background-color:transparent;box-sizing:border-box;display:block;text-decoration:none;color:rgba(255, 255, 255, 0.8);transition:color 0.15s ease-in;">API</a>
+          </div>
+          <p title="P white-50.pt4.f6" style="box-sizing:border-box;color:rgba(255, 255, 255, 0.5);padding-top:32px;font-size:14px;">© 2021 DNSimple Corporation</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+
+<div style="display:none !important;width:1px !important;height:1px !important;opacity:0 !important;pointer-events:none !important;position:relative;"><div style="font-size: 16px; display:block; min-width: 100%; "> <div><div/></div></div></div></div></div></div>
+</div>
+</body></html>
